@@ -1,0 +1,74 @@
+{% extends 'parent.html.twig' %}
+
+{% block title %}作业题{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <h4>作业：</h4>
+    <table class="customize_table">
+        <tr>
+            <td>题目</td>
+            <td>
+                {{ homework.title }}
+            </td>
+        </tr>
+        <tr>
+            <td>内容</td>
+            <td>
+                {{ homework.content }}
+            </td>
+        </tr>
+        <tr>
+            <td>附件</td>
+            <td>
+                {{ homework.getFileUri()|raw }}
+            </td>
+        </tr>
+    </table>
+    
+    <br>
+    {% if pagination.getTotalItemCount > 0%}
+    {# total items count #}
+    <div class="count">
+        <p>本题已收到答卷(共<strong>{{ pagination.getTotalItemCount }}</strong>个)</p>
+    </div>
+    <table class="customize_table">
+    <tr>
+    {# sorting of properties based on query components #}
+        <th>
+            {{ knp_pagination_sortable(pagination, '标识', 'a.id') }}
+        </th>
+        <th {% if pagination.isSorted('a.content') %}class="sorted"{% endif %}>
+            {{ knp_pagination_sortable(pagination, '答案', 'a.content') }}
+        </th>
+        <th {% if pagination.isSorted('a.file') %}class="sorted"{% endif %}>
+            {{ knp_pagination_sortable(pagination, '附件', 'a.file') }}
+        </th>
+        <th {% if pagination.isSorted('a.username') %}class="sorted"{% endif %}>
+            {{ knp_pagination_sortable(pagination, '答卷人', 'a.username') }}
+        </th>
+    </tr>
+
+    {# table body #}
+    {% for answer in pagination %}
+    <tr {% if loop.index is odd %}class="color"{% endif %}>
+        <td>{{ answer.id }}</td>
+        <td>{{ answer.content }}</td>
+        <td>{{ answer.getFileUri()|raw }}</td>
+        <td>{{ answer.username }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

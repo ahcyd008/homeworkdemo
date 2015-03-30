@@ -1,0 +1,60 @@
+body {
+    font-size: 14px;
+    font-family: "微软雅黑", sans-serif;
+    padding: 50px;
+}
+.customize_table {
+  position: relative;
+  width: 100%;
+  margin: 0px;
+}
+.customize_table th {
+  border: 1px #bbb solid;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.customize_table td {
+  border: 1px #ddd solid;
+  padding: 5px 10px 5px 10px;
+}
+.pagination{
+    text-align: center;
+}
+.pagination .page,.first,.last,.next,.previous,.current {
+    //border: 1px solid gray;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-left: 6px;
+    padding-right: 4px;
+}
+.pagination .page:hover,.first:hover,.last:hover,.next:hover,.previous:hover{
+    background-color: #bbb;
+}
+.pagination .current {
+    background-color: #aaa;
+    padding-right: 6px;
+}
+.role-choice {
+    display: inline;
+}
+.homework {
+    border: 1px #bbb dotted;
+    padding: 5px;
+}
+
+.homework input[type=text], textarea{
+    min-width: 400px;
+}
+.submit{
+    margin-top: 5px;
+}
+
+.answer {
+    border: 1px #bbb dotted;
+    padding: 5px;
+}
+
+.answer input[type=text], textarea{
+    min-width: 400px;
+}

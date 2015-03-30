@@ -1,0 +1,68 @@
+{% extends 'parent.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    
+    <p>欢迎使用！</p>
+    {% if normal %}
+        <p>注销请点击 <a class="btn btn-default" href="/logout">注销</a></p>
+        {{ form_start(form, {'attr': {'class': 'select_role'} }) }}
+            <span>请选择角色：</span>
+            {{ form_widget(form.role, {'attr': {'class': 'role-choice'} }) }}
+
+            <input class="btn btn-default" type="submit" value="确认">
+        {{ form_end(form) }}
+    {% else %}
+        <p>登录请点击 <a class="btn btn-default" href="/login">登录</a></p>
+        <p>注册请点击 <a class="btn btn-default" href="/register">注册</a></p>
+        <p>忘记密码请点击 <a class="btn btn-default" href="/resetting/request">找回密码</a></p>
+    {% endif %}
+    <br>
+    
+    {# total items count #}
+    <div class="count">
+        <p>系统已存在以下用户(共<strong>{{ pagination.getTotalItemCount }}</strong>个)</p>
+    </div>
+    <table class="customize_table">
+    <tr>
+    {# sorting of properties based on query components #}
+        <th>
+            {{ knp_pagination_sortable(pagination, '标识', 'a.id') }}
+        </th>
+        <th {% if pagination.isSorted('a.username') %}class="sorted"{% endif %}>
+            {{ knp_pagination_sortable(pagination, '用户名', 'a.username') }}
+        </th>
+        <th {% if pagination.isSorted('a.email') %}class="sorted"{% endif %}>
+            {{ knp_pagination_sortable(pagination, '电子邮件', 'a.email') }}
+        </th>
+        <th {% if pagination.isSorted('a.roles') %}class="sorted"{% endif %}>
+            {{ knp_pagination_sortable(pagination, '角色', 'a.roles') }}
+        </th>
+    </tr>
+
+    {# table body #}
+    {% for user in pagination %}
+    <tr {% if loop.index is odd %}class="color"{% endif %}>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+            {% if user.isTeacher() %}老师{% endif %}
+            {% if user.isStudent() %}学生{% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    </table>
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+    
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'parent.html.twig' %}
+
+{% block title %}学生主页{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <p>{{user.username}}, 您好!</p>
+    <p>注销请点击 <a class="btn btn-default" href="/logout">注销</a></p>
+    <br>
+    {% if pagination.getTotalItemCount > 0%}
+    {# total items count #}
+    <div class="count">
+        <p>系统已存在以下作业题目(共<strong>{{ homework_pagination.getTotalItemCount }}</strong>个)</p>
+    </div>
+    <table class="customize_table">
+    <tr>
+    {# sorting of properties based on query components #}
+        <th>
+            {{ knp_pagination_sortable(homework_pagination, '标识', 'a.id') }}
+        </th>
+        <th {% if pagination.isSorted('a.title') %}class="sorted"{% endif %}>
+            {{ knp_pagination_sortable(homework_pagination, '标题', 'a.title') }}
+        </th>
+        <th {% if pagination.isSorted('a.content') %}class="sorted"{% endif %}>
+            {{ knp_pagination_sortable(homework_pagination, '内容', 'a.content') }}
+        </th>
+        <th>
+            附件
+        </th>
+        <th {% if pagination.isSorted('a.username') %}class="sorted"{% endif %}>
+            {{ knp_pagination_sortable(homework_pagination, '出题人', 'a.username') }}
+        </th>
+        <th>
+            答题数
+        </th>
+        <th>
+            操作
+        </th>
+    </tr>
+
+    {# table body #}
+    {% for homework in homework_pagination %}
+    <tr {% if loop.index is odd %}class="color"{% endif %}>
+        <td>{{ homework.id }}</td>
+        <td>{{ homework.title }}</td>
+        <td>{{ homework.content }}</td>
+        <td>{{ homework.getFileUri()|raw }}</td>
+        <td>{{ homework.username }}</td>
+        <td>{{ homework.answers|length }}</td>
+        <td><a href="/answer/{{ homework.id }}">答卷</a></td>
+    </tr>
+    {% endfor %}
+    </table>
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(homework_pagination) }}
+    </div>
+    {% endif %}
+    
+    {% if pagination.getTotalItemCount > 0%}
+    <br>
+    {# total items count #}
+    <div class="count">
+        <p>已提交的作业(共<strong>{{ pagination.getTotalItemCount }}</strong>个)</p>
+    </div>
+    <table class="customize_table">
+    <tr>
+    {# sorting of properties based on query components #}
+        <th>
+            {{ knp_pagination_sortable(pagination, '标识', 'a.id') }}
+        </th>
+        <th {% if pagination.isSorted('a.content') %}class="sorted"{% endif %}>
+            {{ knp_pagination_sortable(pagination, '答案', 'a.content') }}
+        </th>
+        <th>
+            附件
+        </th>
+        <th {% if pagination.isSorted('a.username') %}class="sorted"{% endif %}>
+            {{ knp_pagination_sortable(pagination, '答卷人', 'a.username') }}
+        </th>
+    </tr>
+
+    {# table body #}
+    {% for answer in pagination %}
+    <tr {% if loop.index is odd %}class="color"{% endif %}>
+        <td>{{ answer.id }}</td>
+        <td>{{ answer.content }}</td>
+        <td>{{ answer.getFileUri()|raw }}</td>
+        <td>{{ answer.username }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
