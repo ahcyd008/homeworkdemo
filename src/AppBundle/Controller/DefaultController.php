@@ -74,10 +74,11 @@ class DefaultController extends Controller
         
         $em    = $this->getDoctrine()
                     ->getManager();
-        $dql   = "SELECT a FROM AppBundle:Answer a where a.username=:p1";
+        $dql   = "SELECT a, e FROM AppBundle:Answer a left join a.homeowrks e where a.username=:p1";
         $query = $em->createQuery($dql)
                 ->setParameters(array('p1'=>$user->getUsername()));
-
+        //$query->setFetchMode("AppBundle\Answer", "Homework", \Doctrine\ORM\Mapping\ClassMetadata::FETCH_EAGER);
+        
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
@@ -85,8 +86,9 @@ class DefaultController extends Controller
             10/*limit per page*/
         );
         
-        $dql   = "SELECT a FROM AppBundle:Homework a";
+        $dql   = "SELECT a, e FROM AppBundle:Homework a left join a.answers e";
         $query = $em->createQuery($dql);
+        $query->setFetchMode("AppBundle\Homework", "Anwser", \Doctrine\ORM\Mapping\ClassMetadata::FETCH_EAGER);
         $homework_pagination = $paginator->paginate(
             $query,
             $request->query->get('page', 1)/*page number*/,
@@ -120,16 +122,18 @@ class DefaultController extends Controller
         
         $em    = $this->getDoctrine()
                     ->getManager();
-        $dql   = "SELECT a FROM AppBundle:Homework a";
+        $dql   = "SELECT a, aw FROM AppBundle:Homework a left join a.answers aw";
         $query = $em->createQuery($dql);
-
+        //$query->setFetchMode("AppBundle\Homework", "Answer", \Doctrine\ORM\Mapping\ClassMetadata::FETCH_EAGER);
+        //$res = $query->getResult(); 
+        
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
             $request->query->get('page', 1)/*page number*/,
             10/*limit per page*/
         );
-        // parameters to template
+        //parameters to template
         return $this->render('default/teacher.html.twig',
                 array(
                     'pagination' => $pagination,
@@ -150,7 +154,7 @@ class DefaultController extends Controller
                     ->find($id);
         $em    = $this->getDoctrine()
                     ->getManager();
-        $dql   = "SELECT a FROM AppBundle:Answer a where a.homeowrk=:p1";
+        $dql   = "SELECT a, e FROM AppBundle:Answer a left join a.homeowrks e where e.id=:p1";
         $query = $em->createQuery($dql)
                 ->setParameters(array('p1'=>$id));
 
@@ -193,7 +197,7 @@ class DefaultController extends Controller
         if ($request->getMethod() == 'POST' && $form->isValid()){
             $em = $this->getDoctrine()->getManager();
             $homework->addAnswer($answer);
-            $answer->setHomeowrk($homework);
+            $answer->addHomeowrk($homework);
             $answer->setUsername($user->getUsername());
             $em->persist($answer);
             $em->persist($homework);
@@ -203,7 +207,7 @@ class DefaultController extends Controller
         
         $em    = $this->getDoctrine()
                     ->getManager();
-        $dql   = "SELECT a FROM AppBundle:Answer a where a.homeowrk=:p1";
+        $dql   = "SELECT a, e FROM AppBundle:Answer a left join a.homeowrks e where e.id=:p1";
         $query = $em->createQuery($dql)
                 ->setParameters(array('p1'=>$id));
 

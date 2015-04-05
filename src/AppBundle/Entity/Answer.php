@@ -205,31 +205,49 @@ class Answer
     
     
     /**
-     * @ORM\ManyToOne(targetEntity="Homework", inversedBy="answers")
-     * @ORM\JoinColumn(name="homework_id", referencedColumnName="id")
+     * @ORM\ManyToMany(targetEntity="Homework", inversedBy="answers", cascade={"persist"})
+     * @ORM\JoinTable(name="homeworks_answers")
      */
-    protected $homeowrk;
+    protected $homeowrks;
 
     /**
-     * Set homeowrk
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->homeowrks = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add homeowrks
      *
-     * @param \AppBundle\Entity\Homework $homeowrk
+     * @param \AppBundle\Entity\Homework $homeowrks
      * @return Answer
      */
-    public function setHomeowrk(\AppBundle\Entity\Homework $homeowrk = null)
+    public function addHomeowrk(\AppBundle\Entity\Homework $homeowrks)
     {
-        $this->homeowrk = $homeowrk;
+        $this->homeowrks[] = $homeowrks;
 
         return $this;
     }
 
     /**
-     * Get homeowrk
+     * Remove homeowrks
      *
-     * @return \AppBundle\Entity\Homework 
+     * @param \AppBundle\Entity\Homework $homeowrks
      */
-    public function getHomeowrk()
+    public function removeHomeowrk(\AppBundle\Entity\Homework $homeowrks)
     {
-        return $this->homeowrk;
+        $this->homeowrks->removeElement($homeowrks);
+    }
+
+    /**
+     * Get homeowrks
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getHomeowrks()
+    {
+        return $this->homeowrks;
     }
 }

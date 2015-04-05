@@ -233,7 +233,8 @@ class Homework
     }
     
     /**
-     * @ORM\OneToMany(targetEntity="Answer", mappedBy="homeowrk")
+     * @ORM\ManyToMany(targetEntity="Answer", mappedBy="homeowrks",  cascade={"persist", "remove"})
+     * @ORM\JoinTable(name="homeworks_answers")
      */
     protected $answers;
     /**

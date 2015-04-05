@@ -89,7 +89,7 @@
         <td>{{ answer.id }}</td>
         <td>{{ answer.content }}</td>
         <td>{{ answer.getFileUri()|raw }}</td>
-        <td>{{ answer.username }}</td>
+        <td>{{ answer.username }}{{answer.homeowrks|length}}</td>
     </tr>
     {% endfor %}
     </table>
